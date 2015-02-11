@@ -1,3 +1,76 @@
 from django.db import models
+from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.processors import SmartResize, ResizeToFit, Transpose
 
 # Create your models here.
+class StaffImage(models.Model):
+	image = ProcessedImageField(upload_to='staff_image', processors=[Transpose(),SmartResize(640, 640)], format='JPEG', options={'quality':40})
+	display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(320, 320)], format='JPEG', options={'quality':40})
+
+	class Meta:
+		verbose_name = 'Staff Image'
+		verbose_name_plural = 'Staff Images'
+
+class StaffCard(models.Model):
+	title = models.CharField(max_length=200)
+	title_slug = models.CharField(max_length=50)
+	content = models.TextField(blank=True)
+	staff_image = models.ForeignKey(StaffImage, blank=True, null=True)
+	order = models.IntegerField(default="0")
+
+	class Meta:
+		ordering = ['-order']
+		verbose_name = 'Staff Card'
+		verbose_name_plural = 'Staff Cards'
+
+class PortfolioImage(models.Model):
+	image = ProcessedImageField(upload_to='portfolio_image', processors=[Transpose(),SmartResize(640, 640)], format='JPEG', options={'quality':40})
+	background_display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(1200, 900)], format='JPEG', options={'quality':40})
+	display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(320, 320)], format='JPEG', options={'quality':40})
+
+	class Meta:
+		verbose_name = 'Portfolio Image'
+		verbose_name_plural = 'Portfolio Images'
+
+class PortfolioCard(models.Model):
+	title = models.CharField(max_length=200)
+	title_slug = models.CharField(max_length=50)
+	content = models.TextField(blank=True)
+	portfolio_image = models.ForeignKey(PortfolioImage, blank=True, null=True)
+	order = models.IntegerField(default="0")
+
+	class Meta:
+		ordering = ['-order']
+		verbose_name = 'Portfolio Card'
+		verbose_name_plural = 'Portfolio Cards'
+
+class PagerBackgroundImage(models.Model):
+	image = ProcessedImageField(upload_to='background_image', processors=[Transpose(),SmartResize(640, 640)], format='JPEG', options={'quality':40})
+	background_display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(1200, 900)], format='JPEG', options={'quality':40})
+
+	class Meta:
+		verbose_name = 'Background Image'
+		verbose_name_plural = 'Background Images'
+
+class PagerBlock(models.Model):
+	title = models.CharField(max_length=200)
+	title_slug = models.CharField(max_length=50)
+	content = models.TextField(blank=True)
+	pager_background_image = models.ForeignKey(BackgroundImage, blank=True, null=True)
+	portfolio_cards = models.ManyToManyField(PortfolioCard, blank=True, null=True, help_text="If this is a portfolio section, what portfolio cards do you want to include?")
+	staff_cards = models.ManyToManyField(StaffCard, blank=True, null=True, help_text="If this is a staff section, what staff cards do you want to include?")
+	in_nav = models.BooleanField(default=True)
+	order = models.IntegerField(default="0")
+
+	class Meta:
+		ordering = ['-order']
+		verbose_name = 'Pager Block'
+		verbose_name_plural = 'Page Blocks'
+
+class Pager(models.Model):
+	logo_text = models.CharField(max_length=255)
+	title = models.CharField(max_length=255)
+	caption = models.CharField(max_length=255)
+	pager_blocks = models.ManyToManyField(PagerBlock)
+
+
