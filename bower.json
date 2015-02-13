@@ -1,0 +1,20 @@
+{
+  "name": "Tracker",
+  "version": "0.5.0",
+  "dependencies": {
+  	"angular": "latest",
+    "angular-animate": "latest",
+    "angular-sanitize": "latest",
+    "angular-growl": "latest",
+    "angular-ui-router": "latest",
+    "angular-ui-bootstrap": "latest",
+    "angular-slider": "latest",
+    "angular-loading-bar": "latest",
+    "angular-touch": "latest",
+    "angular-utils-pagination": "latest",
+    "restangular": "latest",
+    "jquery": "latest",
+    "bootstrap": "latest",
+    "d3": "latest"
+  }
+}

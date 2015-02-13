@@ -41,7 +41,7 @@
     </nav>
 
     {% for pager_block in pager_blocks %}
-        <{% if forloop.first %}header{% else %}section{% endif %} id="{{ pager_block.slug }}" {% if pager_block.background_color or pager_block.pager_background_image or pager_block.font_color %}style="{% if pager_block.background_color %}background-color:#{{ pager_block.background_color }};{% endif %} {% if pager_block.pager_background_image %}background-image:url({{ pager_block.pager_background_image.background_display_image.url }});{% endif %} {% if pager_block.font_color %}color:#{{ pager_block.font_color }};{% endif %}"{% endif %}>
+        <{% if forloop.first %}header{% else %}section{% endif %} id="{{ pager_block.slug }}" {% if pager_block.background_color or pager_block.pager_background_image or pager_block.font_color %}style="{% if pager_block.background_color %}background-color:#{{ pager_block.background_color }};{% endif %} {% if pager_block.pager_background_image %}background:url({{ pager_block.pager_background_image.background_display_image.url }}) center center fixed no-repeat; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;{% endif %} {% if pager_block.font_color %}color:#{{ pager_block.font_color }};{% endif %}"{% endif %}>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 text-center">
@@ -161,7 +161,7 @@
                                         </strong>
                                     </li>
                                     <li>Date:
-                                        <strong>{{ modal_card.date }}</strong>
+                                        <strong>{{ modal_card.project_date }}</strong>
                                     </li>
                                     <li>Service:
                                         <strong>{{ modal_card.service }}</strong>
