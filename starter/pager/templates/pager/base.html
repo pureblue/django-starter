@@ -1,1 +1,175 @@
 {% extends "base.html" %}
+
+{% load staticfiles pager_tags %}
+
+{% block content %}
+	
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#page-top">{% pager text_logo %}</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    {% for pb_nav in pager_blocks %}
+                        {% if pb_nav.in_nav %}
+                            <li class="page-scroll">
+                                <a href="#{{ pb_nav.slug }}">{{ pb_nav.title }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    {% for pager_block in pager_blocks %}
+        <{% if forloop.first %}header{% else %}section{% endif %} id="{{ pager_block.slug }}" {% if pager_block.background_color or pager_block.pager_background_image %}style="{% if pager_block.background_color %}background-color:#{{ pager_block.background_color }};{% endif %} {% if pager_block.pager_background_image %}background-image:url({{ pager_block.pager_background_image.background_display_image.url }});{% endif %}"{% endif %}>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <{% if forloop.first %}h1 class="name"{% else %}h2{% endif %}>{{ pager_block.title }}</{% if forloop.first %}h1{% else %}h2{% endif %}>
+                        {% if pager_block.content %}
+                            {{ pager_block.content|safe|linebreaks }}
+                        {% endif %}
+                    </div>
+                </div>
+                {% if pager_block.portfolio_cards.all %}
+                    <div class="row">
+                        {% for p_card in portfolio_cards_list %}
+                            <div class="col-sm-4 portfolio-item">
+                                <a href="#portfolioModal{{ p_card.id }}" class="portfolio-link" data-toggle="modal">
+                                    <div class="caption">
+                                        <div class="caption-content">
+                                            <i class="fa fa-search-plus fa-3x"></i>
+                                        </div>
+                                    </div>
+                                    <img src="{{ p_card.portfolio_image.display_image.url }}" class="img-responsive" alt="{{ p_card.portfolio_image.title }}">
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if pager_block.staff_cards.all %}
+                    <div class="row">
+                        {% for s_card in staff_cards_list %}
+                            <div class="col-sm-4">
+                                <h3>{{ s_card.first_name }} {{ s_card.last_name }}</h3>
+                                <img src="{{ p_card.portfolio_image.display_image.url }}" class="img-responsive" alt="{{ p_card.portfolio_image.title }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </{% if forloop.first %}header{% else %}section{% endif %}>
+    {% endfor %}
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="footer-above">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col col-md-4">
+                        <h3>Location</h3>
+                        <p>3481 Melrose Place<br>Beverly Hills, CA 90210</p>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <h3>Around the Web</h3>
+                        <ul class="list-inline">
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-dribbble"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <h3>About Freelancer</h3>
+                        <p>Freelance is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; Your Website 2014
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-top page-scroll visible-xs visble-sm">
+        <a class="btn btn-primary" href="#page-top">
+            <i class="fa fa-chevron-up"></i>
+        </a>
+    </div>
+
+    <!-- Portfolio Modals -->
+
+    {% for modal_card in portfolio_cards_list %}
+         <div class="portfolio-modal modal fade" id="portfolioModal{{ modal_card.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-content">
+                <div class="close-modal" data-dismiss="modal">
+                    <div class="lr">
+                        <div class="rl">
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <div class="modal-body">
+                                <h2>{{ modal_card.title }}</h2>
+                                <img src="{{ modal_card.portfolio_image.background_display_image.url }}" class="img-responsive img-centered" alt="">
+                                <p>{{ modal_card.content }}</p>
+                                <ul class="list-inline item-details">
+                                    <li>Client:
+                                        <strong><a href="{{ modal_card.client_website }}">{{ modal_card.client }}</a>
+                                        </strong>
+                                    </li>
+                                    <li>Date:
+                                        <strong>{{ modal_card.date }}</strong>
+                                    </li>
+                                    <li>Service:
+                                        <strong>{{ modal_card.service }}</strong>
+                                    </li>
+                                </ul>
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+	
+{% endblock content %}

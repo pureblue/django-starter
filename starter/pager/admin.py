@@ -22,7 +22,13 @@ class PortfolioCardAdmin(admin.ModelAdmin):
 	prepopulated_fields = {"slug": ("title",)}
 
 class PagerBlockAdmin(admin.ModelAdmin):
+	list_display = ('title', 'order')
+	list_editable = ('order',)
 	prepopulated_fields = {"slug": ("title",)}
+
+class PagerAdmin(admin.ModelAdmin):
+	list_display = ('slug', 'content',)
+	ordering = ('slug',)
 
 admin.site.register(models.StaffImage, StaffImageAdmin)
 admin.site.register(models.StaffCard, StaffCardAdmin)
@@ -30,4 +36,4 @@ admin.site.register(models.PortfolioImage, PortfolioImageAdmin)
 admin.site.register(models.PortfolioCard, PortfolioCardAdmin)
 admin.site.register(models.PagerBackgroundImage, PagerBackgroundImageAdmin)
 admin.site.register(models.PagerBlock, PagerBlockAdmin)
-admin.site.register(models.Pager)
+admin.site.register(models.Pager, PagerAdmin)
