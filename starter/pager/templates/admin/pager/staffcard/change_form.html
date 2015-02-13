@@ -1,0 +1,9 @@
+{% extends "admin/change_form.html" %}
+
+{% block after_related_objects %}
+	{% if not add and original.staff_image %}
+		<h3>Card Image</h3>
+		<img src="{{original.staff_image.thumbnail.url}}" alt="Photo" />
+	{% endif %}
+	{{ block.super }}
+{% endblock after_related_objects %}
