@@ -44,7 +44,7 @@ def do_pagercontent(parser, token):
     except ValueError:
         context_var = None
 
-    if len_bits > 2 and site_id is None and context_var is None:
+    if len_bits > 2 and context_var is None:
         raise template.TemplateSyntaxError("The second or fourth argument should be 'as' or 'for-site'")
 
     return PagerContentNode(bits[1], context_var=context_var)

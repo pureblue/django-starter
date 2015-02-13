@@ -9,7 +9,7 @@ from imagekit.processors import SmartResize, ResizeToFit, Transpose
 class StaffImage(models.Model):
 	name = models.CharField(max_length=100, help_text="Name your image")
 	image = ProcessedImageField(upload_to='staff_image', processors=[Transpose(),SmartResize(640, 640)], format='JPEG', options={'quality':40})
-	display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(320, 320)], format='JPEG', options={'quality':40})
+	display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(640, 640)], format='JPEG', options={'quality':40})
 	thumbnail = ImageSpecField(source='image', processors=[Transpose(),SmartResize(100, 100)], format='JPEG', options={'quality':40})
 
 	class Meta:
@@ -41,7 +41,7 @@ class PortfolioImage(models.Model):
 	name = models.CharField(max_length=100, help_text="Name your image")
 	image = ProcessedImageField(upload_to='portfolio_image', processors=[Transpose(),SmartResize(640, 640)], format='JPEG', options={'quality':40})
 	background_display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(1200, 900)], format='JPEG', options={'quality':40})
-	display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(320, 200)], format='JPEG', options={'quality':40})
+	display_image = ImageSpecField(source='image', processors=[Transpose(),SmartResize(480, 320)], format='JPEG', options={'quality':40})
 	thumbnail = ImageSpecField(source='image', processors=[Transpose(),SmartResize(100, 100)], format='JPEG', options={'quality':40})
 
 	class Meta:
@@ -83,12 +83,26 @@ class PagerBackgroundImage(models.Model):
 	def __str__(self):
 		return self.name
 
+class PagerSocial(models.Model):
+	service_name = models.CharField(max_length=100)
+	slug = models.CharField(max_length=50)
+	service_url = models.URLField()
+
+	class Meta:
+		verbose_name = 'Social Service'
+		verbose_name_plural = 'Social Services'
+
+	def __str__(self):
+		return self.service_name
+
 class PagerBlock(models.Model):
 	title = models.CharField(max_length=200)
 	slug = models.CharField(max_length=50)
 	content = models.TextField(blank=True)
 	pager_background_image = models.ForeignKey(PagerBackgroundImage, blank=True, null=True)
 	background_color = models.CharField(max_length=6, blank=True)
+	font_color = models.CharField(max_length=6, blank=True)
+	text_align = models.CharField(max_length=6, blank=True)
 	portfolio_cards = models.ManyToManyField(PortfolioCard, blank=True, null=True, help_text="If this is a portfolio section, what portfolio cards do you want to include?")
 	staff_cards = models.ManyToManyField(StaffCard, blank=True, null=True, help_text="If this is a staff section, what staff cards do you want to include?")
 	in_nav = models.BooleanField(default=True)

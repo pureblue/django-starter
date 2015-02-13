@@ -3,6 +3,8 @@
 {% load staticfiles pager_tags %}
 
 {% block content %}
+
+    {% pager text_logo as logo %}
 	
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -15,7 +17,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#page-top">{% pager text_logo %}</a>
+                <a class="navbar-brand" href="#page-top">{{ logo }}</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -39,7 +41,7 @@
     </nav>
 
     {% for pager_block in pager_blocks %}
-        <{% if forloop.first %}header{% else %}section{% endif %} id="{{ pager_block.slug }}" {% if pager_block.background_color or pager_block.pager_background_image %}style="{% if pager_block.background_color %}background-color:#{{ pager_block.background_color }};{% endif %} {% if pager_block.pager_background_image %}background-image:url({{ pager_block.pager_background_image.background_display_image.url }});{% endif %}"{% endif %}>
+        <{% if forloop.first %}header{% else %}section{% endif %} id="{{ pager_block.slug }}" {% if pager_block.background_color or pager_block.pager_background_image or pager_block.font_color %}style="{% if pager_block.background_color %}background-color:#{{ pager_block.background_color }};{% endif %} {% if pager_block.pager_background_image %}background-image:url({{ pager_block.pager_background_image.background_display_image.url }});{% endif %} {% if pager_block.font_color %}color:#{{ pager_block.font_color }};{% endif %}"{% endif %}>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 text-center">
@@ -62,16 +64,26 @@
                                     <img src="{{ p_card.portfolio_image.display_image.url }}" class="img-responsive" alt="{{ p_card.portfolio_image.title }}">
                                 </a>
                             </div>
+                            {% if forloop.counter|divisibleby:3 %}
+                                </div><div class="row">
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endif %}
                 {% if pager_block.staff_cards.all %}
                     <div class="row">
                         {% for s_card in staff_cards_list %}
-                            <div class="col-sm-4">
-                                <h3>{{ s_card.first_name }} {{ s_card.last_name }}</h3>
-                                <img src="{{ p_card.portfolio_image.display_image.url }}" class="img-responsive" alt="{{ p_card.portfolio_image.title }}">
+                            <div class="col-sm-{% if staff_cards_list.count >= 3 %}4{% elif staff_cards_list.count == 2 %}6{% elif staff_cards_list.count == 1 %}12{% endif %}">
+                                <img src="{{ s_card.staff_image.display_image.url }}" class="img-responsive{% if staff_cards_list.count >= 3 %} img-circle{% endif %}" alt="{{ s_card.portfolio_image.title }}">
+                                <h3 class="text-center">{% if s_card.email %}<a href="{{ s_card.email }}">{% endif %}{{ s_card.staff_first_name }} {{ s_card.staff_last_name }}{% if s_card.email %}</a>{% endif %}</h3>
+                                <p>{{ s_card.staff_short_bio }}</p>
+                                {% if s_card.phone %}
+                                    <h4 class="text-center">{{ s_card.phone }}</h4>
+                                {% endif %}
                             </div>
+                            {% if forloop.counter|divisibleby:3 %}
+                                </div><div class="row">
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -86,31 +98,23 @@
                 <div class="row">
                     <div class="footer-col col-md-4">
                         <h3>Location</h3>
-                        <p>3481 Melrose Place<br>Beverly Hills, CA 90210</p>
+                        <p>{% pager address %}</p>
                     </div>
+                    {% if pager_social %}
+                        <div class="footer-col col-md-4">
+                            <h3>Around the Web</h3>
+                            <ul class="list-inline">
+                                {% for service in pager_social %}
+                                    <li>
+                                        <a href="{{ service.service_url }}" class="btn-social btn-outline"><i class="fa fa-fw fa-{{ service.slug }}"></i></a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                     <div class="footer-col col-md-4">
-                        <h3>Around the Web</h3>
-                        <ul class="list-inline">
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-dribbble"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="footer-col col-md-4">
-                        <h3>About Freelancer</h3>
-                        <p>Freelance is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+                        <h3>About {{ logo }}</h3>
+                        <p>{% pager description %}</p>
                     </div>
                 </div>
             </div>
@@ -119,7 +123,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        Copyright &copy; Your Website 2014
+                        Copyright &copy; {{ logo }} {% now 'Y' %}
                     </div>
                 </div>
             </div>

@@ -11,4 +11,6 @@ class Pager(TemplateView):
 		context = super(Pager, self).get_context_data(**kwargs)
 		context['pager_blocks'] = models.PagerBlock.objects.all()
 		context['portfolio_cards_list'] = models.PortfolioCard.objects.all()
+		context['staff_cards_list'] = models.StaffCard.objects.all()
+		context['pager_social'] = models.PagerSocial.objects.all()
 		return context
